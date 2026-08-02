@@ -1,0 +1,12 @@
+[package]
+name        = "lex-pack-custody"
+version     = "0.1.0"
+description = "Custody & attestation domain pack — signed, hash-chained handoff events (per-asset chain of custody) over lex-soft/lex-trail. The base primitive lex-pack-coldchain, lex-pack-intermodal, lex-pack-agrifood, and lex-pack-tradefinance build on."
+
+[dependencies]
+lex-soft   = { git = "https://github.com/alpibrusl/lex-soft" }
+lex-trail  = { git = "https://github.com/alpibrusl/lex-trail" }
+lex-web    = { git = "https://github.com/alpibrusl/lex-web" }
+lex-schema = { git = "https://github.com/alpibrusl/lex-schema" }
+lex-crypto = { git = "https://github.com/alpibrusl/lex-crypto" }
+lex-log    = { git = "https://github.com/alpibrusl/lex-log" }
