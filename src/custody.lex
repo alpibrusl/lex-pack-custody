@@ -149,7 +149,7 @@ fn handoff_json(db :: Db, log :: tlog.Log, e :: tev.Event) -> [sql] jv.Json {
 }
 
 fn mount(r :: router.Router, db :: Db, sign_seed :: Bytes, pub_b64 :: Str) -> router.Router {
-  let with_record := router.route_effectful(r, "POST", "/custody/handoffs", fn (c :: ctx.Ctx) -> [io, time, crypto, random, sql, fs_read, fs_write, net, concurrent, llm, proc] resp.Response {
+  let with_record := router.route_effectful(r, "POST", "/custody/handoffs", fn (c :: ctx.Ctx) -> [io, time, crypto, random, sql, fs_read, fs_write, net, concurrent, llm, proc, approval] resp.Response {
     match jv.parse(c.body) {
       Err(_) => resp.bad_request("{\"error\":\"invalid json\"}"),
       Ok(j) => {
@@ -184,7 +184,7 @@ fn mount(r :: router.Router, db :: Db, sign_seed :: Bytes, pub_b64 :: Str) -> ro
       },
     }
   })
-  let with_counter := router.route_effectful(with_record, "POST", "/custody/handoffs/:id/countersign", fn (c :: ctx.Ctx) -> [io, time, crypto, random, sql, fs_read, fs_write, net, concurrent, llm, proc] resp.Response {
+  let with_counter := router.route_effectful(with_record, "POST", "/custody/handoffs/:id/countersign", fn (c :: ctx.Ctx) -> [io, time, crypto, random, sql, fs_read, fs_write, net, concurrent, llm, proc, approval] resp.Response {
     let id := match ctx.path_param(c, "id") {
       Some(s) => s,
       None => "",
@@ -222,7 +222,7 @@ fn mount(r :: router.Router, db :: Db, sign_seed :: Bytes, pub_b64 :: Str) -> ro
       }
     }
   })
-  let with_remote := router.route_effectful(with_counter, "POST", "/custody/handoffs/:id/countersign-remote", fn (c :: ctx.Ctx) -> [io, time, crypto, random, sql, fs_read, fs_write, net, concurrent, llm, proc] resp.Response {
+  let with_remote := router.route_effectful(with_counter, "POST", "/custody/handoffs/:id/countersign-remote", fn (c :: ctx.Ctx) -> [io, time, crypto, random, sql, fs_read, fs_write, net, concurrent, llm, proc, approval] resp.Response {
     let id := match ctx.path_param(c, "id") {
       Some(s) => s,
       None => "",
@@ -256,7 +256,7 @@ fn mount(r :: router.Router, db :: Db, sign_seed :: Bytes, pub_b64 :: Str) -> ro
       }
     }
   })
-  let with_dispute := router.route_effectful(with_remote, "POST", "/custody/handoffs/:id/dispute", fn (c :: ctx.Ctx) -> [io, time, crypto, random, sql, fs_read, fs_write, net, concurrent, llm, proc] resp.Response {
+  let with_dispute := router.route_effectful(with_remote, "POST", "/custody/handoffs/:id/dispute", fn (c :: ctx.Ctx) -> [io, time, crypto, random, sql, fs_read, fs_write, net, concurrent, llm, proc, approval] resp.Response {
     let id := match ctx.path_param(c, "id") {
       Some(s) => s,
       None => "",
@@ -285,7 +285,7 @@ fn mount(r :: router.Router, db :: Db, sign_seed :: Bytes, pub_b64 :: Str) -> ro
       }
     }
   })
-  router.route_effectful(with_dispute, "GET", "/custody/trailers/:ref/journey", fn (c :: ctx.Ctx) -> [io, time, crypto, random, sql, fs_read, fs_write, net, concurrent, llm, proc] resp.Response {
+  router.route_effectful(with_dispute, "GET", "/custody/trailers/:ref/journey", fn (c :: ctx.Ctx) -> [io, time, crypto, random, sql, fs_read, fs_write, net, concurrent, llm, proc, approval] resp.Response {
     let ref := match ctx.path_param(c, "ref") {
       Some(s) => s,
       None => "",
